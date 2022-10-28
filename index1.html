@@ -11,13 +11,13 @@
         <script src="js/libs/ammo.js"></script>
         <script src="js/controls/OrbitControls.js"></script>
         <script type="module">
-            import * as THREE from "three.module.js"
             import {OrbitControls} from "OrbitControls.js";
         </script>
         <script>
 
             //variable declaration section
             let physicsWorld, scene, camera, renderer, rigidBodies = [];
+            let controls;
             let colGroupPlane = 1, colGroupRedBall = 3, colGroupGreenBall = 2
 
             //Ammojs Initialization
@@ -65,6 +65,8 @@
                 camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.2, 5000 );
                 camera.position.set( 0, 30, 70 );
                 camera.lookAt(new THREE.Vector3(0, 0, 0));
+                
+                controls = new OrbitControls(camera, renderer.domElement); //primero camara y segundo del render para que escuche los llamados del mouse
 
                 //Add hemisphere light
                 let hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.1 );
@@ -371,9 +373,7 @@
                 p2p = new Ammo.btPoint2PointConstraint( sphereBody1, blockBody, spherePivot1, blockPivot1);
                 physicsWorld.addConstraint( p2p, false );
 
-            }
-
-            var controls = new OrbitControls(camera, renderer.domElement);//primero camara y segundo del render para que escuche los llamados del mouse
+            }            
 
             function updatePhysics( deltaTime ){
 
