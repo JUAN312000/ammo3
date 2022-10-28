@@ -13,7 +13,7 @@
 
             //variable declaration section
             let physicsWorld, scene, camera, renderer, rigidBodies = [];
-            let colGroupPlane = 1, colGroupRedBall = 2, colGroupGreenBall = 4
+            let colGroupPlane = 1, colGroupRedBall = 4, colGroupGreenBall = 3
 
             //Ammojs Initialization
             Ammo().then(start)
@@ -122,7 +122,7 @@
             function createBlock(){
                 
                 let pos = {x: 0, y: 0, z: 0};
-                let scale = {x: 50, y: 2, z: 50};
+                let scale = {x: 240, y: 2, z: 1100};
                 let quat = {x: 0, y: 0, z: 0, w: 1};
                 let mass = 0;
 
@@ -161,8 +161,8 @@
 
             function createBall(){
                 
-                let pos = {x: 0, y: 20, z: 0};
-                let radius = 2;
+                let pos = {x: -8, y: 20, z: 8};
+                let radius = 1;
                 let quat = {x: 0, y: 0, z: 0, w: 1};
                 let mass = 1;
 
@@ -204,8 +204,8 @@
 
             function createMaskBall(){
                 
-                let pos = {x: 1, y: 30, z: 0};
-                let radius = 2;
+                let pos = {x: 6, y: 30, z: -6};
+                let radius = 6;
                 let quat = {x: 0, y: 0, z: 0, w: 1};
                 let mass = 1;
 
@@ -247,13 +247,14 @@
 
             function createJointObjects(){
                 
-                let pos1 = {x: -1, y: 15, z: 0};
-                let pos2 = {x: -1, y: 10, z: 0};
+                let pos1 = {x: -4, y: 25, z: 0};
+                let pos2 = {x: -4, y: 20, z: 0};
+                let pos3 = {x: -18, y: 25, z: 0};
 
-                let radius = 2;
-                let scale = {x: 5, y: 2, z: 2};
+                let radius = 5;
+                let scale = {x: 20, y: 2, z: 2};
                 let quat = {x: 0, y: 0, z: 0, w: 1};
-                let mass1 = 0;
+                let mass1 = 6;
                 let mass2 = 1;
 
                 let transform = new Ammo.btTransform();
@@ -267,6 +268,18 @@
                 ball.receiveShadow = true;
 
                 scene.add(ball);
+                //Sphere Graphics 2
+
+                let ball2 = new THREE.Mesh(new THREE.SphereBufferGeometry(radius), new THREE.MeshPhongMaterial({color: 0xb846db}));
+
+                ball2.position.set(pos3.x, pos3.y, pos3.z);
+
+                ball2.castShadow = true;
+                ball2.receiveShadow = true;
+
+                scene.add(ball2);
+                
+                
 
 
                 //Sphere Physics
@@ -288,6 +301,29 @@
 
                 ball.userData.physicsBody = sphereBody;
                 rigidBodies.push(ball);
+                
+                
+                 //Sphere Physics 2
+                transform.setIdentity();
+                transform.setOrigin( new Ammo.btVector3( pos3.x, pos3.y, pos3.z ) );
+                transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
+                motionState = new Ammo.btDefaultMotionState( transform );
+
+                sphereColShape = new Ammo.btSphereShape( radius );
+                sphereColShape.setMargin( 0.05 );
+
+                localInertia = new Ammo.btVector3( 0, 0, 0 );
+                sphereColShape.calculateLocalInertia( mass1, localInertia );
+
+                rbInfo = new Ammo.btRigidBodyConstructionInfo( mass1, motionState, sphereColShape, localInertia );
+                sphereBody1 = new Ammo.btRigidBody( rbInfo );
+
+                physicsWorld.addRigidBody( sphereBody1, colGroupGreenBall, colGroupRedBall );
+
+                ball2.userData.physicsBody = sphereBody1;
+                rigidBodies.push(ball2);
+                
+                
                 
 
                 //Block Graphics
