@@ -63,7 +63,7 @@
                 camera.position.set( 0, 30, 70 );
                 camera.lookAt(new THREE.Vector3(0, 0, 0));
                 
-                controls = new OrbitControls(camera, renderer.domElement); //primero camara y segundo del render para que escuche los llamados del mouse
+                controls = new THREE.OrbitControls(camera, renderer.domElement); //primero camara y segundo del render para que escuche los llamados del mouse
 
                 //Add hemisphere light
                 let hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.1 );
@@ -115,7 +115,9 @@
                 updatePhysics( deltaTime );
 
                 renderer.render( scene, camera );
-
+                
+                controls.update();
+                
                 requestAnimationFrame( renderFrame );
 
             }
